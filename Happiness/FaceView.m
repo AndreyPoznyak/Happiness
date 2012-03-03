@@ -13,6 +13,7 @@
 @implementation FaceView
 
 @synthesize scale = _scale;
+@synthesize dataSource = _dataSource;
 
 - (CGFloat)scale
 {
@@ -33,7 +34,7 @@
 {
     if((gesture.state == UIGestureRecognizerStateChanged) ||
        (gesture.state == UIGestureRecognizerStateEnded)){
-        self.scale += gesture.scale;
+        self.scale *= gesture.scale;
         gesture.scale = 1;
     }
 }
@@ -77,7 +78,7 @@
     
     CGFloat size = self.bounds.size.width / 2;
     if(self.bounds.size.height < self.bounds.size.width) size = self.bounds.size.height / 2;
-    size = self.scale;
+    size *= self.scale;
     
     CGContextSetLineWidth(context, 5.0);
     [[UIColor blueColor] setStroke];
@@ -108,7 +109,10 @@
     CGPoint mouseCP2 = mouseEnd;
     mouseCP2.x -= MOUSE_H * size * 2/3;
     
-    float smile = 0;
+    float smile = [self.dataSource smileForFaceView:self];
+    if(smile < -1) smile = -1;
+    if(smile > 1) smile = 1;
+    
     CGFloat smileOffset = smile * MOUSE_SMILE * size;
     mouseCP1.y += smileOffset;
     mouseCP2.y += smileOffset;

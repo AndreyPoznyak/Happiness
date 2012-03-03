@@ -9,7 +9,8 @@
 #import "HappinessViewController.h"
 #import "FaceView.h"
 
-@interface HappinessViewController()
+@interface HappinessViewController() <FaceViewDataSource>
+
 @property (nonatomic, weak) IBOutlet FaceView *faceView;
 @end
 
@@ -29,10 +30,16 @@
     return YES;
 }
 
+- (float)smileForFaceView:(FaceView *)sender
+{
+    return (self.happiness - 50) / 50.0;
+}
+
 - (void)setFaceView:(FaceView *)faceView
 {
     _faceView = faceView;
     [self.faceView addGestureRecognizer:[[UIPinchGestureRecognizer alloc] initWithTarget:self.faceView action:@selector(pinch:)]];
+    self.faceView.dataSource = self;
 }
 
 @end
