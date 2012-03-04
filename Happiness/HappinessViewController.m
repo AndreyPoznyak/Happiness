@@ -39,7 +39,18 @@
 {
     _faceView = faceView;
     [self.faceView addGestureRecognizer:[[UIPinchGestureRecognizer alloc] initWithTarget:self.faceView action:@selector(pinch:)]];
+    [self.faceView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleHappinessGesture:)]];
     self.faceView.dataSource = self;
+}
+
+- (void)handleHappinessGesture:(UIPanGestureRecognizer *)gesture
+{
+    if((gesture.state == UIGestureRecognizerStateChanged) ||
+      (gesture.state == UIGestureRecognizerStateEnded)){
+        CGPoint tranclation = [gesture translationInView:self.faceView];
+        self.happiness -= tranclation.y / 2;
+        [gesture setTranslation:CGPointZero inView:self.faceView];
+    }
 }
 
 @end
